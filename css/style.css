@@ -268,3 +268,34 @@ input[type="number"] {
     color: var(--text-light);
     font-weight: 500;
 }
+
+/* ===============================================================
+// 任務與獎品圖示樣式
+// =============================================================== */
+
+.item-icon, .item-icon-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    flex-shrink: 0; /* 防止圖示在 flex 佈局中被壓縮 */
+}
+
+.item-icon {
+    object-fit: cover; /* 確保圖片等比例縮放且填滿容器 */
+    background-color: #eee; /* 圖片載入前的底色 */
+}
+
+.item-icon-placeholder {
+    background-color: #f0f0f0; /* 若無圖示，則顯示一個淺灰色塊 */
+    border: 1px dashed var(--border-color);
+}
+
+.reward-icon {
+    width: 80px; /* 讓獎品圖示大一點 */
+    height: 80px;
+    margin: 0 auto 15px; /* 在獎品卡片中置中並與標題產生間距 */
+}
+
+.task-list li {
+    align-items: center; /* 讓圖示和右側資訊垂直置中對齊 */
+}
