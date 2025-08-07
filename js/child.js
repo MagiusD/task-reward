@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderPage({ currentMedals, rewards }) {
-        medalCountElement.textContent = `${currentMedals} í ¼í¿…`;
+        medalCountElement.textContent = `${currentMedals} ðŸ…`;
         rewardShop.innerHTML = '';
 
         if (rewards.length === 0) {
@@ -95,4 +95,5 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.className = 'toast';
         }, 3000);
     }
+
 });
