@@ -32,57 +32,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // renderDashboard 函式現在會接收第三個參數 todaysTaskLogs
-    function renderDashboard(tasks, children, todaysTaskLogs) {
-        dashboard.innerHTML = '';
-        children.forEach(child => {
-            const childSection = document.createElement('section');
-            childSection.className = 'child-section card';
-            childSection.innerHTML = `<h3>${child.UserName} 的任務</h3>`;
+
+function renderDashboard(tasks, children, todaysTaskLogs) {
+    dashboard.innerHTML = '';
+    children.forEach(child => {
+        const childSection = document.createElement('section');
+        childSection.className = 'child-section card';
+        childSection.innerHTML = `<h3>${child.UserName} 的任務</h3>`;
+        
+        const taskList = document.createElement('ul');
+        taskList.className = 'task-list';
+
+        tasks.forEach(task => {
+            const completionCount = todaysTaskLogs.filter(log => 
+                log.UserID == child.UserID && log.TaskID === task.TaskID
+            ).length;
+
+            const dailyLimit = Number(task.DailyLimit);
+            const isLimitReached = completionCount >= dailyLimit;
+
+            const li = document.createElement('li');
             
-            const taskList = document.createElement('ul');
-            taskList.className = 'task-list';
+            // 根據 task.IconURL 是否存在來決定顯示圖片或佔位符
+            const iconHtml = task.IconURL 
+                ? `<img src="${task.IconURL}" alt="${task.TaskName}" class="item-icon">`
+                : `<div class="item-icon-placeholder"></div>`;
 
-            tasks.forEach(task => {
-                // --- 主要修改區域：計算完成次數並決定按鈕狀態 ---
-                const completionCount = todaysTaskLogs.filter(log => 
-                    log.UserID == child.UserID && log.TaskID === task.TaskID
-                ).length;
-
-                const dailyLimit = Number(task.DailyLimit);
-                const isLimitReached = completionCount >= dailyLimit;
-
-                const li = document.createElement('li');
-                
-                // 使用模板字串來組合包含新資訊的 HTML
-                li.innerHTML = `
-                    <div class="task-info">
-                        <span class="task-name">${task.TaskName} (+${task.MedalValue} 獎章)</span>
-                        <span class="task-counter">今日已完成: ${completionCount} / ${dailyLimit}</span>
-                    </div>
-                    <button 
-                        class="task-button" 
-                        data-user-id="${child.UserID}" 
-                        data-task-id="${task.TaskID}"
-                        ${isLimitReached ? 'disabled' : ''}
-                    >
-                        ${isLimitReached ? '已達上限' : '完成一次'}
-                    </button>
-                `;
-                // --- 修改結束 ---
-                taskList.appendChild(li);
-            });
-            
-            childSection.appendChild(taskList);
-            dashboard.appendChild(childSection);
+            li.innerHTML = `
+                ${iconHtml}
+                <div class="task-info">
+                    <span class="task-name">${task.TaskName} (+${task.MedalValue} 獎章)</span>
+                    <span class="task-counter">今日已完成: ${completionCount} / ${dailyLimit}</span>
+                </div>
+                <button 
+                    class="task-button" 
+                    data-user-id="${child.UserID}" 
+                    data-task-id="${task.TaskID}"
+                    ${isLimitReached ? 'disabled' : ''}
+                >
+                    ${isLimitReached ? '已達上限' : '完成一次'}
+                </button>
+            `;
+            taskList.appendChild(li);
         });
+        
+        childSection.appendChild(taskList);
+        dashboard.appendChild(childSection);
+    });
 
-        document.querySelectorAll('.task-button').forEach(button => {
-            if (!button.disabled) {
-                button.addEventListener('click', handleCompleteTask);
-            }
-        });
-    }
-
+    document.querySelectorAll('.task-button').forEach(button => {
+        if (!button.disabled) {
+            button.addEventListener('click', handleCompleteTask);
+        }
+    });
+}
     async function handleCompleteTask(event) {
         const button = event.target;
         const { userId, taskId } = button.dataset;
@@ -110,3 +113,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 });
+
