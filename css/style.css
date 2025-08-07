@@ -241,4 +241,30 @@ input[type="number"] {
     visibility: visible;
 }
 .toast.success { background-color: var(--success-color); }
+
 .toast.error { background-color: var(--error-color); }
+
+/* ===============================================================
+// 家長頁面任務列表優化樣式
+// =============================================================== */
+
+.task-list li {
+    gap: 15px; /* 在任務資訊和按鈕間增加一些間距 */
+}
+
+.task-info {
+    display: flex;
+    flex-direction: column; /* 讓任務名稱和計數器垂直排列 */
+    flex-grow: 1; /* 讓資訊區塊佔據多餘空間 */
+    gap: 5px; /* 任務名稱和計數器之間的間距 */
+}
+
+.task-name {
+    font-size: 1.1em;
+}
+
+.task-counter {
+    font-size: 0.9em;
+    color: var(--text-light);
+    font-weight: 500;
+}
