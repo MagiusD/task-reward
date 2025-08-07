@@ -28,41 +28,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function renderPage({ currentMedals, rewards }) {
-        medalCountElement.textContent = `${currentMedals} 🏅`;
-        rewardShop.innerHTML = '';
+function renderPage({ currentMedals, rewards }) {
+    medalCountElement.textContent = `${currentMedals} 🏅`;
+    rewardShop.innerHTML = '';
 
-        if (rewards.length === 0) {
-            rewardShop.innerHTML = '<p>爸爸媽媽還沒有設定獎品喔！</p>';
-            return;
-        }
-
-        rewards.forEach(reward => {
-            const rewardCard = document.createElement('div');
-            rewardCard.className = 'reward-card card';
-
-            const canAfford = currentMedals >= reward.Cost;
-
-            rewardCard.innerHTML = `
-                <h4>${reward.RewardName}</h4>
-                <p class="cost">${reward.Cost} 獎章</p>
-                <div class="limits">
-                    ${reward.TotalLimit ? `<p>總限 ${reward.TotalLimit} 次</p>` : ''}
-                    ${reward.DailyLimit ? `<p>每日限 ${reward.DailyLimit} 次</p>` : ''}
-                </div>
-                <button class="redeem-button" data-reward-id="${reward.RewardID}" ${!canAfford ? 'disabled' : ''}>
-                    ${canAfford ? '我要兌換' : '獎章不足'}
-                </button>
-            `;
-            rewardShop.appendChild(rewardCard);
-        });
-
-        document.querySelectorAll('.redeem-button').forEach(button => {
-            if (!button.disabled) {
-                button.addEventListener('click', handleRedeemReward);
-            }
-        });
+    if (rewards.length === 0) {
+        rewardShop.innerHTML = '<p>爸爸媽媽還沒有設定獎品喔！</p>';
+        return;
     }
+
+    rewards.forEach(reward => {
+        const rewardCard = document.createElement('div');
+        rewardCard.className = 'reward-card card';
+
+        const canAfford = currentMedals >= reward.Cost;
+
+        const iconHtml = reward.IconURL
+            ? `<img src="${reward.IconURL}" alt="${reward.RewardName}" class="item-icon reward-icon">`
+            : `<div class="item-icon-placeholder reward-icon"></div>`;
+
+        rewardCard.innerHTML = `
+            ${iconHtml}
+            <h4>${reward.RewardName}</h4>
+            <p class="cost">${reward.Cost} 獎章</p>
+            <div class="limits">
+                ${reward.TotalLimit ? `<p>總限 ${reward.TotalLimit} 次</p>` : ''}
+                ${reward.DailyLimit ? `<p>每日限 ${reward.DailyLimit} 次</p>` : ''}
+            </div>
+            <button class="redeem-button" data-reward-id="${reward.RewardID}" ${!canAfford ? 'disabled' : ''}>
+                ${canAfford ? '我要兌換' : '獎章不足'}
+            </button>
+        `;
+        rewardShop.appendChild(rewardCard);
+    });
+
+    document.querySelectorAll('.redeem-button').forEach(button => {
+        if (!button.disabled) {
+            button.addEventListener('click', handleRedeemReward);
+        }
+    });
+}
     
     async function handleRedeemReward(event) {
         const button = event.target;
@@ -97,3 +102,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
